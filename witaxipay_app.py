@@ -1,7 +1,6 @@
 import requests
 import pandas as pd
 import streamlit as st
-from time import sleep
 
 hide_streamlit_style = """
             <style>
