@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 import streamlit as st
+from time import sleep
 
 hide_streamlit_style = """
             <style>
@@ -91,7 +92,7 @@ def account_reporting():
   st.write('Registered Wallets')
   import pandas as pd
   df = pd.DataFrame(columns=['Name', 'Phone Number', 'Email', 'Status', 'Created On', 'Available', 'Balance',
-                            'Num of Transactions', 'Charges', 'Topups', 'Transfers', 'Cashouts', 'Last Trans Date', 'Last Trans Type', 'Last Trans Amt', 'Role'])
+                            'Num of Transactions', 'Charges', 'Topups', 'p2p transfers', 'Ride payments', 'Cashouts', 'Last Trans Date', 'Last Trans Type', 'Last Trans Amt', 'Role'])
 
   with st.spinner("Loading..."):
     for dic in wallet_accts:
@@ -105,20 +106,24 @@ def account_reporting():
       role = data['abstract']['role']
       wallet_trans = f"{base_url}/network/express/wallet/{num}/transaction?currency=ZAR"
       wallet_rsp = requests.request("GET", wallet_trans, headers=headers, data=payload)
-      wallet_data = wallet_rsp.json()['data']
+      # wallet_data = wallet_rsp.json()['data']
+
+      wallet_data = [i for i in wallet_rsp.json()['data'] if i['timestamp'].split('T')[0] > '2024-09-30']
+
       if wallet_data:
         num_transactions = len(wallet_data)   # getting the number of wallet transaction
         # Doing Transaction Breakdown
         di = {}
         for i in wallet_data:
           type_name = i['type_name']
+          type_name = i['abstract']['type'] if i['type_name'] == 'Transfer' else i['type_name']
           di[type_name] = di.get(type_name, 0) + 1
 
-        def_di = {"Top Up": 0, 'Transfer': 0, 'Cash Out': 0, 'Charge': 0}   # Default dictionary to model
+        def_di = {"Top Up": 0, 'p2p': 0, 'ride': 0,'Cash Out': 0, 'Charge': 0}   # Default dictionary to model
         if di:
           for k in di.keys():
             def_di[k] = di[k]
-            charge, topup, transfer, cashout  = def_di['Charge'], def_di['Top Up'], def_di['Transfer'], def_di['Cash Out']
+            charge, topup, p2p, ride, cashout  = def_di['Charge'], def_di['Top Up'], def_di['p2p'], def_di['ride'], def_di['Cash Out']
         # else:
         #   charge, topup, transfer, cashout = 0, 0, 0, 0
 
@@ -129,18 +134,18 @@ def account_reporting():
             actual_trans = wallet_data[k]
             last_trans_date = actual_trans['timestamp']
             last_trans_amt = actual_trans['amount']
-            last_trans_type = actual_trans['type_name']
+            last_trans_type = actual_trans['abstract']['type'] if actual_trans['type_name'] == 'Transfer' else actual_trans['type_name']   # actual_trans['type_name']
             break
 
       else:
-        num_transactions, charge, topup, transfer, cashout, last_trans_date, last_trans_amt = 0, 0, 0, 0, 0, None, None
+        num_transactions, charge, topup, p2p, ride, cashout, last_trans_date, last_trans_amt, last_trans_type = 0, 0, 0, 0, 0, 0, None, None, None
 
 
       for i in range(registered_wallets):
         new_rec = pd.DataFrame([[name, num, email, state, dic['opened'], dic['available'], dic['balance'],
-                                num_transactions, charge, topup, transfer, cashout, last_trans_date, last_trans_amt, last_trans_type, role]],
+                                num_transactions, charge, topup, p2p, ride, cashout, last_trans_date, last_trans_amt, last_trans_type, role]],
                               columns=['Name', 'Phone Number', 'Email', 'Status', 'Created On', 'Available', 'Balance',
-                                        'Num of Transactions', 'Charges', 'Topups', 'Transfers', 'Cashouts', 'Last Trans Date', 'Last Trans Amt', 'Last Trans Type', 'Role'])
+                                        'Num of Transactions', 'Charges', 'Topups', 'p2p transfers', 'Ride payments', 'Cashouts', 'Last Trans Date', 'Last Trans Amt', 'Last Trans Type', 'Role'])
       df = pd.concat([df, new_rec], ignore_index=True)
 
     st.dataframe(df)
@@ -184,7 +189,7 @@ def transaction_analytics():
 
     col3, col4 = st.columns(2)
     col5, col6 = st.columns(2)
-    
+
 
     # transaction report
     url = f"{base_url}/network/express/account/{accounts[acct]}/transaction"
@@ -224,6 +229,9 @@ def transaction_analytics():
     lst_pick = [trans_count, amount_per_type]
     for pick in lst_pick:
       # Transaction Count Pie Chart
+      # importing libraries
+      import matplotlib.pyplot as plt
+      import seaborn
 
       # declaring data
       data = [v for v in pick.values()]
@@ -285,7 +293,7 @@ def transaction_analytics():
 
 if rep_selectbox == "Account Reporting":
   account_reporting()
-  
+
 else:
   transaction_analytics()
-  
+
