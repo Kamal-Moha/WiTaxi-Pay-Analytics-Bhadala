@@ -89,7 +89,7 @@ def account_reporting():
       st.metric(label="Value of Walets", value=wallet_value)
 
   # REGISTERED WALLETS
-  st.write('Registered Wallets')
+  st.markdown('**Registered Wallets**')
   import pandas as pd
   df = pd.DataFrame(columns=['Name', 'Phone Number', 'Email', 'Status', 'Created On', 'Available', 'Balance',
                             'Num of Transactions', 'Charges', 'Topups', 'p2p transfers', 'Ride payments', 'Cashouts', 'Last Trans Date', 'Last Trans Type', 'Last Trans Amt', 'Role'])
@@ -148,6 +148,7 @@ def account_reporting():
                                         'Num of Transactions', 'Charges', 'Topups', 'p2p transfers', 'Ride payments', 'Cashouts', 'Last Trans Date', 'Last Trans Amt', 'Last Trans Type', 'Role'])
       df = pd.concat([df, new_rec], ignore_index=True)
 
+    st.write('Below Data is from 2024/09/30 until now')
     st.dataframe(df)
 
 @st.cache_data
@@ -296,4 +297,4 @@ if rep_selectbox == "Account Reporting":
 
 else:
   transaction_analytics()
-
+            
