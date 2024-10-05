@@ -89,7 +89,7 @@ def account_reporting():
       st.metric(label="Value of Walets", value=wallet_value)
 
   # REGISTERED WALLETS
-  st.markdown('**Registered Wallets**')
+  st.markdown('**Wallet Account Analytics**')
   import pandas as pd
   df = pd.DataFrame(columns=['Name', 'Phone Number', 'Email', 'Status', 'Created On', 'Available', 'Balance',
                             'Num of Transactions', 'Charges', 'Topups', 'p2p transfers', 'Ride payments', 'Cashouts', 'Last Trans Date', 'Last Trans Type', 'Last Trans Amt', 'Role'])
