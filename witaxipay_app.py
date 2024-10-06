@@ -35,65 +35,66 @@ rep_selectbox = st.sidebar.selectbox(
 
 print(rep_selectbox)
 
+
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+st.header('WiTaxi Pay - Account Dashboard', divider='rainbow')
+# st.title("WiTaxi Pay - Account Dashboard")
+
+accrual_accts = [i for i in acct_rsp.json()['data'] if i['type'] == 'accrual']
+sel_rev = float([i['available'] for i in accrual_accts if i['alias'] == "platform_accrual"][0])
+# print(f'SEL Revenue: {sel_rev:.2f}')
+
+# witaxipay revenue
+witaxipay_rev = float([i['available'] for i in accrual_accts if i['alias'] == "network_accrual"][0])
+# print(f'WiTaxi Pay Revenue: {witaxipay_rev:.2f}')
+
+merchant_accts = [i for i in acct_rsp.json()['data'] if i['type'] == 'merchant']
+
+# Bhadala Revenue
+bhadala_rev = float([i['available'] for i in merchant_accts if i['alias'] == "Bhadala Holding Account"][0])
+# print(f'Bhadala Revenue: {bhadala_rev:.2f}')
+
+# # Associations Revenue
+assoc_rev = float([i['available'] for i in merchant_accts if i['alias'] == "Associations Holding Account"][0])
+# print(f'Association Revenue: {assoc_rev:.2f}')
+
+wallet_accts = [i for i in acct_rsp.json()['data'] if i['type'] == 'wallet']
+registered_wallets = len(wallet_accts)
+available = [float(i['available']) for i in wallet_accts]
+wallet_value = f'{sum(available):.2f}'
+
+
+import streamlit as st
+import streamlit_shadcn_ui as ui
+
+cols = st.columns(4)
+with cols[0]:
+    ui.metric_card(title="WiTaxi Pay Revenue", content=f"R {witaxipay_rev}", key="card1")
+with cols[1]:
+    ui.metric_card(title="SEL Revenue", content=f"R {sel_rev}", key="card2")
+with cols[2]:
+    ui.metric_card(title="Bhadala Revenue", content=f"R {bhadala_rev}", key="card3")
+with cols[3]:
+    ui.metric_card(title="Associations Revenue", content=f"R {assoc_rev}",)
+
+# Down Column
+cols = st.columns(2)
+with cols[0]:
+    ui.metric_card(title="Registered Wallets", content=registered_wallets)
+with cols[1]:
+    ui.metric_card(title="Value of Wallets", content=wallet_value)
+
+
+# REGISTERED WALLETS
+st.markdown('**Wallet Account Analytics**')
+
 @st.cache_data
 def account_reporting():
-  st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-  st.header('WiTaxi Pay - Account Dashboard', divider='rainbow')
-  # st.title("WiTaxi Pay - Account Dashboard")
-
-  accrual_accts = [i for i in acct_rsp.json()['data'] if i['type'] == 'accrual']
-  sel_rev = float([i['available'] for i in accrual_accts if i['alias'] == "platform_accrual"][0])
-  # print(f'SEL Revenue: {sel_rev:.2f}')
-
-  # witaxipay revenue
-  witaxipay_rev = float([i['available'] for i in accrual_accts if i['alias'] == "network_accrual"][0])
-  # print(f'WiTaxi Pay Revenue: {witaxipay_rev:.2f}')
-
-  merchant_accts = [i for i in acct_rsp.json()['data'] if i['type'] == 'merchant']
-
-  # Bhadala Revenue
-  bhadala_rev = float([i['available'] for i in merchant_accts if i['alias'] == "Bhadala Holding Account"][0])
-  # print(f'Bhadala Revenue: {bhadala_rev:.2f}')
-
-  # # Associations Revenue
-  assoc_rev = float([i['available'] for i in merchant_accts if i['alias'] == "Associations Holding Account"][0])
-  # print(f'Association Revenue: {assoc_rev:.2f}')
-
-  wallet_accts = [i for i in acct_rsp.json()['data'] if i['type'] == 'wallet']
-  registered_wallets = len(wallet_accts)
-  available = [float(i['available']) for i in wallet_accts]
-  wallet_value = f'{sum(available):.2f}'
-
-  # Up Column
-  up_col1, up_col2, up_col3, up_col4 = st.columns(4)
-
-  with up_col1:
-      st.metric(label="WiTaxi Pay Revenue", value=f"R {witaxipay_rev}")
-
-  with up_col2:
-      st.metric(label="SEL Revenue", value=f"R {sel_rev}")
-
-  with up_col3:
-      st.metric(label="Bhadala Revenue", value=f"R {bhadala_rev}")
-
-  with up_col4:
-      st.metric(label="Associations Revenue", value=f"R {assoc_rev}")
-
-  # Down Column
-  down_col1, down_col2 = st.columns(2)
-
-  with down_col1:
-      st.metric(label="Registered Wallets", value=registered_wallets)
-
-  with down_col2:
-      st.metric(label="Value of Walets", value=wallet_value)
-
-  # REGISTERED WALLETS
-  st.markdown('**Wallet Account Analytics**')
   import pandas as pd
   df = pd.DataFrame(columns=['Name', 'Phone Number', 'Email', 'Status', 'Created On', 'Available', 'Balance',
                             'Num of Transactions', 'Charges', 'Topups', 'p2p transfers', 'Ride payments', 'Cashouts', 'Last Trans Date', 'Last Trans Type', 'Last Trans Amt', 'Role'])
 
+  import streamlit as st
   with st.spinner("Loading..."):
     for dic in wallet_accts:
       num = dic['alias']
@@ -297,4 +298,4 @@ if rep_selectbox == "Account Reporting":
 
 else:
   transaction_analytics()
-            
+
