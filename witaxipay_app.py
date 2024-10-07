@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 import streamlit as st
 from time import sleep
+import streamlit_shadcn_ui as ui
 
 hide_streamlit_style = """
             <style>
@@ -37,7 +38,6 @@ print(rep_selectbox)
 
 
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-st.header('WiTaxi Pay - Account Dashboard', divider='rainbow')
 # st.title("WiTaxi Pay - Account Dashboard")
 
 accrual_accts = [i for i in acct_rsp.json()['data'] if i['type'] == 'accrual']
@@ -64,29 +64,7 @@ available = [float(i['available']) for i in wallet_accts]
 wallet_value = f'{sum(available):.2f}'
 
 
-import streamlit as st
-import streamlit_shadcn_ui as ui
 
-cols = st.columns(4)
-with cols[0]:
-    ui.metric_card(title="WiTaxi Pay Revenue", content=f"R {witaxipay_rev}", key="card1")
-with cols[1]:
-    ui.metric_card(title="SEL Revenue", content=f"R {sel_rev}", key="card2")
-with cols[2]:
-    ui.metric_card(title="Bhadala Revenue", content=f"R {bhadala_rev}", key="card3")
-with cols[3]:
-    ui.metric_card(title="Associations Revenue", content=f"R {assoc_rev}",)
-
-# Down Column
-cols = st.columns(2)
-with cols[0]:
-    ui.metric_card(title="Registered Wallets", content=registered_wallets)
-with cols[1]:
-    ui.metric_card(title="Value of Wallets", content=wallet_value)
-
-
-# REGISTERED WALLETS
-st.markdown('**Wallet Account Analytics**')
 
 @st.cache_data
 def account_reporting():
@@ -149,6 +127,8 @@ def account_reporting():
                                         'Num of Transactions', 'Charges', 'Topups', 'p2p transfers', 'Ride payments', 'Cashouts', 'Last Trans Date', 'Last Trans Amt', 'Last Trans Type', 'Role'])
       df = pd.concat([df, new_rec], ignore_index=True)
 
+    # REGISTERED WALLETS
+    st.markdown('**Wallet Account Analytics**')
     st.write('Below Data is from 2024/09/30 until now')
     st.dataframe(df)
 
@@ -231,7 +211,6 @@ def transaction_analytics():
     lst_pick = [trans_count, amount_per_type]
     for pick in lst_pick:
       # Transaction Count Pie Chart
-      # importing libraries
 
       # declaring data
       data = [v for v in pick.values()]
@@ -292,6 +271,26 @@ def transaction_analytics():
 
 
 if rep_selectbox == "Account Reporting":
+
+  st.header('WiTaxi Pay - Account Dashboard', divider='rainbow')
+
+  cols = st.columns(4)
+  with cols[0]:
+      ui.metric_card(title="WiTaxi Pay Revenue", content=f"R {witaxipay_rev}", key="card1")
+  with cols[1]:
+      ui.metric_card(title="SEL Revenue", content=f"R {sel_rev}", key="card2")
+  with cols[2]:
+      ui.metric_card(title="Bhadala Revenue", content=f"R {bhadala_rev}", key="card3")
+  with cols[3]:
+      ui.metric_card(title="Associations Revenue", content=f"R {assoc_rev}",)
+
+  # Down Column
+  cols = st.columns(2)
+  with cols[0]:
+      ui.metric_card(title="Registered Wallets", content=registered_wallets)
+  with cols[1]:
+      ui.metric_card(title="Value of Wallets", content=wallet_value)
+
   account_reporting()
 
 else:
