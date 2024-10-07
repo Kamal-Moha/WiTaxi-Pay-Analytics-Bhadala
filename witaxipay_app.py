@@ -232,8 +232,6 @@ def transaction_analytics():
     for pick in lst_pick:
       # Transaction Count Pie Chart
       # importing libraries
-      import matplotlib.pyplot as plt
-      import seaborn
 
       # declaring data
       data = [v for v in pick.values()]
