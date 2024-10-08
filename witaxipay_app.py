@@ -64,10 +64,8 @@ available = [float(i['available']) for i in wallet_accts]
 wallet_value = f'{sum(available):.2f}'
 
 
-
-
-@st.cache_data
-def account_reporting():
+@st.fragment
+def account_reporting(start, end):
   import pandas as pd
   df = pd.DataFrame(columns=['Name', 'Phone Number', 'Email', 'Status', 'Created On', 'Available', 'Balance',
                             'Num of Transactions', 'Charges', 'Topups', 'p2p transfers', 'Ride payments', 'Cashouts', 'Last Trans Date', 'Last Trans Type', 'Last Trans Amt', 'Role'])
@@ -87,9 +85,14 @@ def account_reporting():
       wallet_rsp = requests.request("GET", wallet_trans, headers=headers, data=payload)
       # wallet_data = wallet_rsp.json()['data']
 
-      wallet_data = [i for i in wallet_rsp.json()['data'] if i['timestamp'].split('T')[0] > '2024-09-30']
+      if start == end:
+        wallet_data = [i for i in wallet_rsp.json()['data'] if datetime.strptime(i['timestamp'].split('T')[0], '%Y-%m-%d').date() == start]
+      else:
+        wallet_data = [i for i in wallet_rsp.json()['data'] if datetime.strptime(i['timestamp'].split('T')[0], '%Y-%m-%d').date() >= start and datetime.strptime(i['timestamp'].split('T')[0], '%Y-%m-%d').date() <= end]
 
       if wallet_data:
+        # new_wallet_data = [i for i in wallet_rsp.json()['data'] if i['timestamp'].split('T')[0] > '2024-09-30']
+        
         num_transactions = len(wallet_data)   # getting the number of wallet transaction
         # Doing Transaction Breakdown
         di = {}
@@ -129,7 +132,11 @@ def account_reporting():
 
     # REGISTERED WALLETS
     st.markdown('**Wallet Account Analytics**')
-    st.write('Below Data is from 2024/09/30 until now')
+    if start == end:
+      st.write(f'Below Data is for the date: {start}')
+    else:
+      st.write(f'Below Data is from {start} until {end}')
+                
     st.dataframe(df)
 
 @st.cache_data
@@ -291,8 +298,32 @@ if rep_selectbox == "Account Reporting":
   with cols[1]:
       ui.metric_card(title="Value of Wallets", content=wallet_value)
 
-  account_reporting()
+
+  from datetime import datetime, timedelta
+  import streamlit as st
+  from streamlit_date_picker import date_range_picker, date_picker, PickerType
+  st.markdown("**Date Range Picker**")
+  default_start, default_end = datetime.now() - timedelta(days=1), datetime.now()
+  refresh_value = timedelta(days=1)
+  date_range_string = date_range_picker(picker_type=PickerType.date,
+                                        start=default_start, end=default_end,
+                                        key=f'date_range_picker',
+                                        refresh_button={'is_show': True, 'button_name': 'Refresh Last 1 Days',
+                                                        'refresh_value': refresh_value})
+  if date_range_string:
+    start, end = date_range_string
+    start = datetime.strptime(start, "%Y-%m-%d").date()
+    end = datetime.strptime(end, "%Y-%m-%d").date()
+    print(start, end)
+    print(type(start), type(end))
+    # start, end = date_range_string
+
+    # st.write(f"Below Data is from {start} to {end}")
+
+  print(date_range_string)
+  import streamlit_shadcn_ui as ui
+  
+  account_reporting(start, end)
 
 else:
   transaction_analytics()
-
