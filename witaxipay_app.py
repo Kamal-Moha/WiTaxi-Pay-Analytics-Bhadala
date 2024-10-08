@@ -303,6 +303,7 @@ if rep_selectbox == "Account Reporting":
   import streamlit as st
   from streamlit_date_picker import date_range_picker, date_picker, PickerType
   st.markdown("**Date Range Picker**")
+  st.write('(Select Dates after 2024-09-30)')
   default_start, default_end = datetime.now() - timedelta(days=1), datetime.now()
   refresh_value = timedelta(days=1)
   date_range_string = date_range_picker(picker_type=PickerType.date,
