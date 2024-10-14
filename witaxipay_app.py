@@ -74,6 +74,10 @@ def account_reporting(start, end):
   with st.spinner("Loading..."):
     for dic in wallet_accts:
       num = dic['alias']
+      if num == "27817412150":
+        print(f"Skipping: {num}...")
+        continue
+      print(f"num: {num}, type: {type(num)}")
       consumer_request = f"{base_url}/network/express/consumer/{num}"
       response = requests.request("GET", consumer_request, headers=headers, data=payload)
       data = response.json()['data']
