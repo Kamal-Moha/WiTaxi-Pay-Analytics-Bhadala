@@ -44,6 +44,9 @@ accrual_accts = [i for i in acct_rsp.json()['data'] if i['type'] == 'accrual']
 sel_rev = float([i['available'] for i in accrual_accts if i['alias'] == "platform_accrual"][0])
 # print(f'SEL Revenue: {sel_rev:.2f}')
 
+# Bank Revenue
+bank_rev = float([i['available'] for i in accrual_accts if i['alias'] == "bank_accrual"][0])
+
 # witaxipay revenue
 witaxipay_rev = float([i['available'] for i in accrual_accts if i['alias'] == "network_accrual"][0])
 # print(f'WiTaxi Pay Revenue: {witaxipay_rev:.2f}')
@@ -77,12 +80,11 @@ def account_reporting(start, end):
       if num == "27817412150":
         print(f"Skipping: {num}...")
         continue
-      print(f"num: {num}, type: {type(num)}")
       consumer_request = f"{base_url}/network/express/consumer/{num}"
       response = requests.request("GET", consumer_request, headers=headers, data=payload)
       data = response.json()['data']
-      name = data['name']
       email = data['email']
+      name = data['name']
       state = data['state']
       role = data['abstract']['role']
       wallet_trans = f"{base_url}/network/express/wallet/{num}/transaction?currency=ZAR"
@@ -168,13 +170,16 @@ def transaction_analytics():
   # Creating Transaction Report
   accounts = {
       "WiTaxi Pay":"1000000004",
-      "Bhadala":"3000000002"
+      "Bhadala":"3000000002",
+      "Nedbank": "1000000003"
   }
 
   for acct in accounts:
     st.header(f"{acct} Info")
     if acct == "Bhadala":
       st.metric("Revenue", f"{bhadala_rev:.2f}")
+    elif acct == "Nedbank":
+      st.metric("Revenue", f"{bank_rev:.2f}")
     else:
       col1, col2 = st.columns(2)
       col1.metric("Revenue", f"{witaxipay_rev:.2f}")
@@ -296,10 +301,12 @@ if rep_selectbox == "Account Reporting":
       ui.metric_card(title="Associations Revenue", content=f"R {assoc_rev}",)
 
   # Down Column
-  cols = st.columns(2)
+  cols = st.columns(3)
   with cols[0]:
       ui.metric_card(title="Registered Wallets", content=registered_wallets)
   with cols[1]:
+      ui.metric_card(title="Nedbank Revenue", content=bank_rev)
+  with cols[2]:
       ui.metric_card(title="Value of Wallets", content=wallet_value)
 
 
