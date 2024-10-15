@@ -30,7 +30,7 @@ st.markdown("""
         </style>
         """, unsafe_allow_html=True)
 
-st.logo("/logo.JPG", size='large')
+st.logo("logo.JPG", size='large')
 
 base_url = "https://api.production.af-south-1.siliconenterprise.com"
 payload = {}
