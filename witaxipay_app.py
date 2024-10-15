@@ -19,23 +19,31 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+st.markdown("""
+        <style>
+               .block-container {
+                    padding-top: 1rem;
+                    padding-bottom: 0rem;
+                    padding-left: 5rem;
+                    padding-right: 5rem;
+                }
+        </style>
+        """, unsafe_allow_html=True)
+
+st.logo("/logo.JPG", size='large')
+
 base_url = "https://api.production.af-south-1.siliconenterprise.com"
 payload = {}
 headers = {
   'Accept': '*/*',
   'Authorization': 'Bearer 5ebb05ae-5422-417f-b639-286dd3d5be8b'
 }
+
+
+
 # Getting account Info
 acct_request = f"{base_url}/network/express/account"
 acct_rsp = requests.request("GET", acct_request, headers=headers, data=payload)
-
-rep_selectbox = st.sidebar.selectbox(
-    "What do you want to monitor?",
-    ("Account Reporting", "Transaction Analytics")
-)
-
-print(rep_selectbox)
-
 
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 # st.title("WiTaxi Pay - Account Dashboard")
@@ -285,8 +293,9 @@ def transaction_analytics():
     col6.dataframe(tran_ct_df)
 
 
+tab1, tab2 = st.tabs(["Account Reporting", "Transaction Analytics"])
 
-if rep_selectbox == "Account Reporting":
+with tab1:
 
   st.header('WiTaxi Pay - Account Dashboard', divider='rainbow')
 
@@ -337,5 +346,5 @@ if rep_selectbox == "Account Reporting":
   
   account_reporting(start, end)
 
-else:
+with tab2:
   transaction_analytics()
