@@ -23,7 +23,9 @@ jobs:
           
       - name: execute py script # run main.py
         env:
-          SOME_SECRET: ${{ secrets.SOME_SECRET }}
+          AUTH_KEY: ${{ secrets.AUTH_KEY }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+
         run: |
           python acct_df.py
           python wallet_accts.py
