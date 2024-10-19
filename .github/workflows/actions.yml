@@ -1,4 +1,4 @@
-name: run acct_df.py
+name: Data Collection & Sync
 
 on:
   workflow_dispatch:
