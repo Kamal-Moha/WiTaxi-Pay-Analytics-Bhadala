@@ -1,8 +1,9 @@
 import requests
 import os
 import pandas as pd
-base_url = "https://api.production.af-south-1.siliconenterprise.com"
+base_url = os.environ['BASE_URL']
 auth_key = os.environ['AUTH_KEY']
+
 accounts = {
       "WiTaxi Pay":"1000000004",
       "Bhadala":"3000000002",
@@ -19,7 +20,7 @@ for acct in accounts:
   payload = {}
   headers = {
     'Accept': '*/*',
-    'Authorization': 'Bearer 02815098-0249-49fa-9264-cbccb3c6a7bb'
+    'Authorization': f'Bearer {auth_key}'
   }
 
   response = requests.request("GET", url, headers=headers, data=payload)
