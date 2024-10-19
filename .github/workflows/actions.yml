@@ -27,18 +27,12 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
 
         run: |
-          python acct_df.py
           python wallet_accts.py
+          python acct_df.py
+
+      - name: commit and push
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: Apply php-cs-fixer changes
           
-      - name: commit files
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "updated logs" --allow-empty)
-          
-      - name: push changes
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main 
+
