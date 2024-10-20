@@ -31,11 +31,12 @@ jobs:
         run: |
           python wallet_accts.py 
           python acct_df.py 
-      # - name:
-      #   run: git add .
+          
       
       - name: Commit & Push
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: 'Synced data from API'
+        run:
+          git config user.name "Kamal"
+          git add .
+          git commit -m "Data Collection & Sync"
+          git push
         
