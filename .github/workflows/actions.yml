@@ -29,20 +29,22 @@ jobs:
           AUTH_KEY: ${{ secrets.AUTH_KEY }}
           BASE_URL: ${{ secrets.BASE_URL }}
 
-        run: |
-          python wallet_accts.py
-          python acct_df.py      
+        run: python wallet_accts.py
+        run: python acct_df.py      
       
-      - name: Commit files
+      - name: 'Commit files'
         run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git commit -a -m "Add changes"
-          
-      - name: Push changes
+          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config --local user.name "$GITHUB_ACTOR"
+          git add .
+          git status
+          git commit -m "PUSH TO Add changes" -a
+          git push -f https://${{ secrets.PAT }}@github.com/Kamal-Moha/WiTaxi-Pay-Analytics-Bhadala.git
+
+      - name: 'Push changes'
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+          github_token: ${{ secrets.PAT }}
+          branch: ${{ github.head_ref }}`
 
           
