@@ -4,7 +4,7 @@ on:
   # workflow_dispatch:
   
   schedule:
-    - cron: '59 7 * * *' # Run everyday at 06:08
+    - cron: '59 8 * * *' # Run everyday at 06:08
 
 jobs:
   build:
@@ -35,12 +35,13 @@ jobs:
       
       - name: commit files
         run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git commit -a -m "Collected  and synced data for wallet & accounts"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git diff-index --quiet HEAD || (git commit -a -m "updated logs" --allow-empty)
           
       - name: push changes
-        uses: ad-m/github-push-action@master
+        uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main 
