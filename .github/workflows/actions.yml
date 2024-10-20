@@ -32,19 +32,7 @@ jobs:
         run: python wallet_accts.py
         run: python acct_df.py      
       
-      - name: 'Commit files'
-        run: |
-          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
-          git config --local user.name "$GITHUB_ACTOR"
-          git add .
-          git status
-          git commit -m "PUSH TO Add changes" -a
-          git push -f https://${{ secrets.PAT }}@github.com/Kamal-Moha/WiTaxi-Pay-Analytics-Bhadala.git
-
-      - name: 'Push changes'
-        uses: ad-m/github-push-action@master
+      - name: Commit & Push
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          github_token: ${{ secrets.PAT }}
-          branch: ${{ github.head_ref }}`
-
-          
+          commit_message: 'Synced data from API'
