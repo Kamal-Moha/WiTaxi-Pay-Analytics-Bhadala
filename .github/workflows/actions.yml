@@ -1,7 +1,7 @@
 name: Data Collection & Sync
 
 on:
-  workflow-dispatch:
+  workflow_dispatch:
   
   # schedule:
   #   - cron: '56 23 * * *' # Run everyday at 23:56
