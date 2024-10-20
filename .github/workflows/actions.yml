@@ -31,8 +31,8 @@ jobs:
         run: |
           python wallet_accts.py 
           python acct_df.py 
-      - name:
-        run: git add .
+      # - name:
+      #   run: git add .
       
       - name: Commit & Push
         uses: stefanzweifel/git-auto-commit-action@v5
