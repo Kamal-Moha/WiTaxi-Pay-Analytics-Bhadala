@@ -1,8 +1,10 @@
 name: Data Collection & Sync
 
 on:
-  schedule:
-    - cron: '56 23 * * *' # Run everyday at 23:56
+  workflow-dispatch:
+  
+  # schedule:
+  #   - cron: '56 23 * * *' # Run everyday at 23:56
 
 jobs:
   build:
