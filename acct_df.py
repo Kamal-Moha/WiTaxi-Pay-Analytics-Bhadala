@@ -40,5 +40,4 @@ acct_df = acct_df.assign(
         time=acct_df["Timestamp"].dt.time
     )
 
-acct_df.to_csv('accts_data.csv', index=False)
-
+acct_df.to_csv('Data/accts_data.csv', index=False)
