@@ -36,8 +36,6 @@ jobs:
           python wallet_accts.py 
           python acct_df.py 
           
-      - run: git status
-      
       - name: Commit & Push
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
