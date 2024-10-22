@@ -54,9 +54,6 @@ df = pd.DataFrame(columns=['Name', 'Phone Number', 'Email', 'Status', 'Created O
                                   'SNSI', "Trans Type", "Amount", "Timestamp", 'Role'])
 for dic in wallet_accts:
   num = dic['alias']
-  if num == "27817412150":
-    print(f"Skipping: {num}...")
-    continue
   consumer_request = f"{base_url}/network/express/consumer/{num}"
   response = requests.request("GET", consumer_request, headers=headers, data=payload)
   data = response.json()['data']
@@ -88,7 +85,8 @@ for dic in wallet_accts:
     # num_transactions = len(wallet_data)   # getting the number of wallet transaction
     # Doing Transaction Breakdown
     for i in wallet_data:
-      type_name = i['abstract']['type'] if i['type_name'] == 'Transfer' else i['type_name']
+      type_name = i['abstract']['type'] if i['type_name'] == 'Transfer' and i['abstract'] else f"{i['type_name']} - {i['reference']}"
+
       snsi = i['snsi']
       amount = i['amount']
       # date, time = i['timestamp'].split('T')
