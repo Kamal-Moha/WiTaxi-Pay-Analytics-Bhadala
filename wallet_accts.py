@@ -54,9 +54,9 @@ df = pd.DataFrame(columns=['Name', 'Phone Number', 'Email', 'Status', 'Created O
                                   'SNSI', "Trans Type", "Amount", "Timestamp", 'Role'])
 for dic in wallet_accts:
   num = dic['alias']
-  # if num == "27817412150":
-  #   print(f"Skipping: {num}...")
-  #   continue
+  if num == "27817412150":
+    print(f"Skipping: {num}...")
+    continue
   consumer_request = f"{base_url}/network/express/consumer/{num}"
   response = requests.request("GET", consumer_request, headers=headers, data=payload)
   data = response.json()['data']
