@@ -39,5 +39,5 @@ acct_df = acct_df.assign(
         date=acct_df["Timestamp"].dt.date,
         time=acct_df["Timestamp"].dt.time
     )
-# executing df save as csv
-exec(acct_df.to_csv('Data/accts_data.csv', index=False))
+
+acct_df.to_csv('Data/accts_data.csv', index=False)
