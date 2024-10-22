@@ -114,5 +114,5 @@ df = df.assign(
         date=df["Timestamp"].dt.date,
         time=df["Timestamp"].dt.time
     )
-
-df.to_csv('Data/data.csv', index=False)
+# executing df save as csv
+exec(df.to_csv('Data/data.csv', index=False))
