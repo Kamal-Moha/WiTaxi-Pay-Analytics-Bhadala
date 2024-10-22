@@ -3,8 +3,8 @@ name: Data Collection & Sync
 on:
   workflow_dispatch:
   
-  # schedule:
-  #   - cron: '35 21 * * *' # Run everyday at 06:08
+  schedule:
+    - cron: '17 09 * * *' # Run everyday at 06:08
 
 jobs:
   build:
