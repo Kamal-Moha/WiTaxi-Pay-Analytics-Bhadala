@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   
   schedule:
-    - cron: '05 16 * * *' # Run everyday at 06:08
+    - cron: '03 22 * * *' # Run every night at 00:03 SA time
 
 jobs:
   build:
@@ -35,9 +35,15 @@ jobs:
         run: |
           python wallet_accts.py 
           python acct_df.py 
-          
+
+      - name: Set commit message
+        id: commit_message_step
+        run: echo commit_message="Data Collected & Synced from API - " $(date '+%Y-%m-%d %H:%M:%S') >> $GITHUB_OUTPUT
+
       - name: Commit & Push
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'Synced data from API'
+          commit_message: ${{ steps.commit_message_step.outputs.commit_message }}
+          
+
         
