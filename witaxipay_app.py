@@ -23,7 +23,7 @@ st.markdown("""
         <style>
                .block-container {
                     padding-top: 1rem;
-                    padding-bottom: 0rem;
+                    padding-bottom: 5rem;
                     padding-left: 5rem;
                     padding-right: 5rem;
                 }
@@ -157,23 +157,6 @@ def account_reporting(start, end):
 def transaction_analytics():
   st.markdown(hide_streamlit_style, unsafe_allow_html=True)
   st.header('WiTaxi Pay Transaction Report', divider='rainbow')
-
-  # getting registered wallets - To calculate ARPU
-  account_request = f"{base_url}/network/express/account"
-  account_rsp = requests.request("GET", account_request, headers=headers, data=payload)
-  wallet_accts = [i for i in account_rsp.json()['data'] if i['type'] == 'wallet']
-  registered_wallets = len(wallet_accts)
-
-  accrual_accts = [i for i in account_rsp.json()['data'] if i['type'] == 'accrual']
-  # witaxipay revenue
-  witaxipay_rev = float([i['available'] for i in accrual_accts if i['alias'] == "network_accrual"][0])
-
-  # merchant account
-  merchant_accts = [i for i in account_rsp.json()['data'] if i['type'] == 'merchant']
-
-  # Bhadala Revenue
-  bhadala_rev = float([i['available'] for i in merchant_accts if i['alias'] == "Bhadala Holding Account"][0])
-
 
   # Creating Transaction Report
   accounts = {
