@@ -112,7 +112,9 @@ def account_reporting(start, end):
         di = {}
         for i in wallet_data:
           type_name = i['type_name']
-          type_name = i['abstract']['type'] if i['type_name'] == 'Transfer' else i['type_name']
+          # type_name = i['abstract']['type'] if i['type_name'] == 'Transfer' else i['type_name']
+          type_name = i['abstract']['type'] if i['type_name'] == 'Transfer' and i['abstract'] else f"{i['type_name']} - {i['reference']}"
+
           di[type_name] = di.get(type_name, 0) + 1
 
         def_di = {"Top Up": 0, 'p2p': 0, 'ride': 0,'Cash Out': 0, 'Charge': 0}   # Default dictionary to model
