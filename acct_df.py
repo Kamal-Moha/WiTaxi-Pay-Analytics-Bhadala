@@ -13,7 +13,7 @@ accounts = {
   }
 acct_df = pd.DataFrame(columns=['Acct Name', 'Trans Type', 'Amount', 'Timestamp'])
 for acct in accounts:
-  url = f"{base_url}/network/express/account/{accounts[acct]}/transaction"
+  url = f"{base_url}/network/express/account/{accounts[acct]}/transaction?currency=ZAR"
   trans = {"Wallet to Wallet Transfer": "p2p", "Wallet to Wallet Transfer - Ride": "Ride", "Notification via SMS": "SMS",
            "Topup via Online Card": "Card Topup", "Topup via Instant EFT": "EFT Topup",
            "Cashout via ATM": "Cashout ATM", "Cashout via Retail": "Cashout Retail"}
