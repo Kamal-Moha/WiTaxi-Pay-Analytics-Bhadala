@@ -85,7 +85,7 @@ for dic in wallet_accts:
     # num_transactions = len(wallet_data)   # getting the number of wallet transaction
     # Doing Transaction Breakdown
     for i in wallet_data:
-      type_name = i['abstract']['type'] if i['type_name'] == 'Transfer' and i['abstract'] else f"{i['type_name']} - {i['reference']}"
+      type_name = i['abstract']['type'] if i['type_name'] == 'Transfer' and i['abstract'] else f"{i['type_name']}"
 
       snsi = i['snsi']
       amount = i['amount']
