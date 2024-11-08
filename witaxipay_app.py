@@ -113,7 +113,7 @@ def account_reporting(start, end):
         for i in wallet_data:
           type_name = i['type_name']
           # type_name = i['abstract']['type'] if i['type_name'] == 'Transfer' else i['type_name']
-          type_name = i['abstract']['type'] if i['type_name'] == 'Transfer' and i['abstract'] else f"{i['type_name']} - {i['reference']}"
+          type_name = i['abstract']['type'] if i['type_name'] == 'Transfer' and i['abstract'] else f"{i['type_name']}"
 
           di[type_name] = di.get(type_name, 0) + 1
 
@@ -124,9 +124,7 @@ def account_reporting(start, end):
             charge, topup, p2p, ride, cashout  = def_di['Charge'], def_di['Top Up'], def_di['p2p'], def_di['ride'], def_di['Cash Out']
         # else:
         #   charge, topup, transfer, cashout = 0, 0, 0, 0
-
-
-
+                  
         for k in range(len(wallet_data)):
           if wallet_data[k]['type_name'] in ['Transfer', 'Cash Out', 'Top Up']:
             actual_trans = wallet_data[k]
