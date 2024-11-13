@@ -309,11 +309,14 @@ with tab1:
   st.write('(Select Dates after 2024-09-30)')
   default_start, default_end = datetime.now() - timedelta(days=1), datetime.now()
   refresh_value = timedelta(days=1)
+  refresh_buttons = [{
+                    'button_name': 'Refresh Last 1 Days',
+                    'refresh_value': refresh_value
+                  }]
   date_range_string = date_range_picker(picker_type=PickerType.date,
                                         start=default_start, end=default_end,
                                         key=f'date_range_picker',
-                                        refresh_button={'is_show': True, 'button_name': 'Refresh Last 1 Days',
-                                                        'refresh_value': refresh_value})
+                                        refresh_buttons=refresh_buttons)
   if date_range_string:
     start, end = date_range_string
     start = datetime.strptime(start, "%Y-%m-%d").date()
