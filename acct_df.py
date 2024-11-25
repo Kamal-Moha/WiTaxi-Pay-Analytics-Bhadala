@@ -16,7 +16,8 @@ for acct in accounts:
   url = f"{base_url}/network/express/account/{accounts[acct]}/transaction?currency=ZAR"
   trans = {"Wallet to Wallet Transfer": "p2p", "Wallet to Wallet Transfer - Ride": "Ride", "Notification via SMS": "SMS",
            "Topup via Online Card": "Card Topup", "Topup via Instant EFT": "EFT Topup",
-           "Cashout via ATM": "Cashout ATM", "Cashout via Retail": "Cashout Retail"}
+           "Cashout via ATM": "Cashout ATM", "Cashout via Retail": "Cashout Retail", 
+          'Payment via EFT Standard': 'Payment via EFT Standard', 'Payment via EFT Realtime': 'Payment via EFT Realtime'}
   payload = {}
   headers = {
     'Accept': '*/*',
