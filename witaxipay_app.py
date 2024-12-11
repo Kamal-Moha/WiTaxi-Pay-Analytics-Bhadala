@@ -82,7 +82,7 @@ def account_reporting(comb_df, start, end):
 
   unique_nums = filtered_df['Phone Number'].unique()
 
-  final_df = pd.DataFrame(columns=['Name', 'Phone Number', 'Email', 'Role' 'Status', 'Created On', 'Available', 'Balance',
+  final_df = pd.DataFrame(columns=['Name', 'Phone Number', 'Email', 'Role', 'Status', 'Created On', 'Available', 'Balance',
                               'Num of Transactions', 'Topups', 'p2p transfers', 'Ride payments', 'Cashouts',
                                   'Last Trans Date', 'Last Trans Type', 'Last Trans Amt'])
 
