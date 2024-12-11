@@ -32,11 +32,11 @@ st.markdown("""
         """, unsafe_allow_html=True)
 
 
-base_url = "https://api.production.af-south-1.siliconenterprise.com"
+base_url = st.secrets['base_url']
 payload = {}
 headers = {
   'Accept': '*/*',
-  'Authorization': 'Bearer 5ebb05ae-5422-417f-b639-286dd3d5be8b'
+  'Authorization': f'Bearer {st.secrets["auth_key"]}'
 }
 # Getting account Info
 acct_request = f"{base_url}/network/express/account"
