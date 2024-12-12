@@ -284,7 +284,102 @@ def transaction_analytics():
     col5.dataframe(rev_df)
     col6.dataframe(tran_ct_df)
 
-tab1, tab2 = st.tabs(["Account Reporting", "Transaction Analytics"])
+
+def cashout_analytics():
+  st.header('WiTaxiPay Cashouts')
+
+  trans_df = pd.read_csv("Data/data.csv")
+  cashout_df = trans_df[trans_df["Trans Type"] == "Cash Out"]
+
+  nums = list(cashout_df['Phone Number'].unique())
+  import requests
+  redeem_url = st.secrets['cashout_url']
+  redeem_status = []
+  redeemed_place = []
+
+  redeemed_df = pd.DataFrame(columns=['Phone Number', 'Code', 'Status', 'Amount', 'RedeemedOn', 'RedeemedAt'])
+
+  redeemable_df = pd.DataFrame(columns=['Phone Number', 'Code', 'Status', 'Amount', 'OrderExpiry'])
+  refunded_df = pd.DataFrame(columns=['Phone Number', 'Code', 'Status', 'Amount', 'RefundedOn'])
+
+  for n in nums:
+    response = requests.get(f'{redeem_url}/{n}/history')
+    for csh in response.json()['Data']:
+      code = csh['Voucher']['Code']
+      status = csh['Voucher']['Status']
+      amount = csh['Voucher']['Amount']['Amount']
+      if status == 'REDEEMED':
+        redeemed_on = csh['Voucher']['Redeem']['RedeemedOn']
+        redeemed_at = csh['Voucher']['Redeem']['RedeemedAt']
+        red_row = pd.DataFrame([[f"{n}", code, status, amount, redeemed_on, redeemed_at]],
+            columns=['Phone Number', 'Code', 'Status', 'Amount', 'RedeemedOn', 'RedeemedAt'])
+        redeemed_df = pd.concat([redeemed_df, red_row], ignore_index=True)
+
+      elif status == 'REFUNDED':
+        refunded_on = csh['Voucher']['Refund']['RefundedOn']
+        ref_row = pd.DataFrame([[f"{n}", code, status, amount, refunded_on]],
+                  columns=['Phone Number', 'Code', 'Status', 'Amount', 'RefundedOn'])
+        refunded_df = pd.concat([refunded_df, ref_row], ignore_index=True)
+        
+      elif status == "REDEEMABLE":
+        order_expiry = csh['OrderExpiry']
+        redem_row = pd.DataFrame([[f"{n}", code, status, amount, order_expiry]],
+                columns=['Phone Number', 'Code', 'Status', 'Amount', 'OrderExpiry'])
+        redeemable_df = pd.concat([redeemable_df, redem_row], ignore_index=True)
+
+  orig_vals = redeemed_df['RedeemedAt']
+  new_vals = [i.split('-')[0].strip() for i in orig_vals]
+
+  values = [new_vals.count('Nedbank ATM'), new_vals.count('Shoprite')]
+  labels = ['Nedbank ATM', 'Shoprite']
+
+  import plotly.graph_objects as go
+
+  fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
+  # fig.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+
+  fig.update_traces(hoverinfo='value', textinfo='label+percent', textfont_size=12,
+                          marker=dict(line=dict(color='#000000', width=1)))
+
+  fig.update_layout(barmode='group',
+                    autosize=False,
+                    width=500,
+                    height=500,
+                    # margin=dict(t=0, b=0, l=0, r=0),
+                    title=dict(
+                              text = "Places users have cashed out from",
+                              x = 0.5, y = 0.90,
+                              xanchor =  'center', yanchor = 'top',
+                              #pad = dict(
+                              #            t = 0
+                              #           ),
+                              font = dict(
+                                          #family='Courier New, monospace',
+                                          size = 20,
+                                          #color='#000000'
+                                          )
+                              )
+
+                          )
+
+
+  col1, col2 = st.columns(2)
+  col3, col4 = st.columns(2)
+
+  with col1:
+    st.header("REDEEMED")
+    st.dataframe(redeemed_df)
+  with col2:
+    st.plotly_chart(fig, use_container_width=True)
+
+  with col3:
+    st.header("REDEEMABLE")
+    st.dataframe(redeemable_df)
+  with col4:
+    st.header("REFUNDED")
+    st.dataframe(refunded_df)
+
+tab1, tab2, tab3 = st.tabs(["Account Reporting", "Transaction Analytics", "Cashout Analytics"])
 
 
 with tab1:
@@ -367,8 +462,9 @@ with tab1:
   
   st.dataframe(fun_call[1])
   
-  
 
 with tab2:
   transaction_analytics()
 
+with tab3:
+  cashout_analytics()
