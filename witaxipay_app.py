@@ -435,7 +435,7 @@ with tab1:
   witaxipay_acct = flt_acct[flt_acct['Acct Name'] == "WiTaxi Pay"]
   witaxipay_rev = f"{sum(witaxipay_acct['Amount']):.2f}"
   # Associations
-  assoc_acct = flt_acct[flt_acct['Acct Name'] == "Association"]
+  assoc_acct = flt_acct[flt_acct['Acct Name'] == "Associations"]
   assoc_rev = f"{sum(assoc_acct['Amount']):.2f}" 
 
   cols = st.columns(4)
